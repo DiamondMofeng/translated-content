@@ -242,6 +242,8 @@ false
 
 ### 数值字面量
 
+[Number](/zh-CN/docs/Web/JavaScript/Data_structures#number_类型) 与 [BigInt](/zh-CN/docs/Web/JavaScript/Data_structures#bigint_类型) 类型使用数值字面量。
+
 #### 十进制
 
 ```js-nolint
@@ -249,7 +251,21 @@ false
 42
 ```
 
-请注意，十进制数值字面量可以以 0 开头，但是如果 0 以后的最高位比 8 小，数值将会被认为是八进制而不会报错。更多信息可以参考 [Firefox bug 957513](https://bugzil.la/957513) 和 [`parseInt()`](/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseInt#Octal_interpretations_with_no_radix)。
+请注意，在非严格模式下，十进制数值字面量可以以 0 开头，但是如果 0 以后的所有数字均小于 8，数值将会被认为是八进制而不会报错。在严格模式下，上述行为将会抛出[`SyntaxError`](/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError)：“Octal literals are not allowed in strict mode.”。 如有需要，请使用 0o 前缀来表示八进制数值字面量。更多信息可以参考 [Firefox bug 957513](https://bugzil.la/957513) 和 [`parseInt()`](/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseInt#Octal_interpretations_with_no_radix)。
+
+#### 指数
+
+十进制指数数值字面量通过以下方式进行表示：`beN`，其中 `b` 是基数（整数或小数），后跟 `E` 或 `e` 字符（用作分隔符或 _指数指示器_ ）和表示 _指数_ 或 _幂_ 的有符号整数 `N` 。
+
+```js-nolint
+0e-5   // 0
+0e+5   // 0
+5e1    // 50
+175e-2 // 1.75
+1e3    // 1000
+1e-3   // 0.001
+1E3    // 1000
+```
 
 #### 二进制
 
@@ -279,6 +295,31 @@ false
 0x123456789ABCDEF   // 81985529216486900
 0XA                 // 10
 ```
+#### BigInt 字面量
+
+[BigInt](/zh-CN/docs/Web/JavaScript/Data_structures#bigint_类型) 类型是 Javascript 中的一种基本数字类型。其可以表示任意精度的整数。可以通过在整数结尾添加 `n` 来创建 BigInt 字面量。
+
+```js-nolint
+123456789123456789n     // 123456789123456789
+0o777777777777n         // 68719476735
+0x123456789ABCDEFn      // 81985529216486895
+0b11101001010101010101n // 955733
+```
+
+为避免与遗留的八进制字面量语法混淆，BigInt 字面量不能以 0 开头。
+
+```js example-bad
+0755n;
+// SyntaxError: invalid BigInt syntax
+```
+
+若希望在八进制下创建 BigInt 数值，请使用 `0o` 或 `0O` 作为前缀：
+
+```js example-good
+0o755n;
+```
+
+更多关于 `BigInt` 类型的信息可以参考 [JavaScript data structures](/en-US/docs/Web/JavaScript/Data_structures#bigint_类型).
 
 #### 数值分隔符
 
